@@ -6,6 +6,7 @@ const initialState = {
   showWorkoutEditModal: false,
   showWorkoutMenuModal: false,
   showExerciseAddModal: false,
+  showRoutineEditModal: false,
 };
 
 export const modalSlice = createSlice({
@@ -27,6 +28,9 @@ export const modalSlice = createSlice({
     setShowExerciseAddModal: (state, action) => {
       state.showExerciseAddModal = action.payload;
     },
+    setShowRoutineEditModal: (state, action) => {
+      state.showRoutineEditModal = action.payload;
+    },
   },
 });
 
@@ -37,6 +41,7 @@ export const {
   setShowWorkoutEditModal,
   setShowWorkoutMenuModal,
   setShowExerciseAddModal,
+  setShowRoutineEditModal,
 } = modalSlice.actions;
 
 // selectors
@@ -50,5 +55,7 @@ export const selectShowWorkoutMenuModal = (state) =>
   state.modal.showWorkoutMenuModal;
 export const selectShowExerciseAddModal = (state) =>
   state.modal.showExerciseAddModal;
+export const selectShowRoutineEditModal = (state) =>
+  state.modal.showRoutineEditModal;
 
 export default modalSlice.reducer;

@@ -5,18 +5,12 @@ import {
   Animated,
   StyleSheet,
   Pressable,
-  Alert,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import { Swipeable } from "react-native-gesture-handler";
-import { useDispatch } from "react-redux";
-import { removeSet } from "../slices/workoutSlice";
 import { Delete } from "react-native-feather";
-import { nanoid } from "@reduxjs/toolkit";
 
-export default function ExerciseSetInput({ exercise, set, idx }) {
-  const dispatch = useDispatch();
-
+export default function ExerciseSetInput({ exercise, setWorkout, set, idx }) {
   const swipeableRef = useRef(null);
 
   const [weight, onChangeWeight] = useState(null);
@@ -29,13 +23,23 @@ export default function ExerciseSetInput({ exercise, set, idx }) {
       extrapolate: "clamp",
     });
 
-    const onPressRemove = () => {
+    const onRemoveSet = () => {
       swipeableRef.current.close();
-      dispatch(removeSet({ exercise, set }));
+      setWorkout((prevState) => ({
+        ...prevState,
+        exercises: prevState.exercises.map((e) =>
+          exercise._id === e._id
+            ? {
+                ...e,
+                prevSets: e.prevSets.filter((s, i) => i !== idx),
+              }
+            : e
+        ),
+      }));
     };
 
     return (
-      <Pressable onPress={() => onPressRemove()}>
+      <Pressable onPress={() => onRemoveSet()}>
         <View style={styles.rightAction}>
           <View className="flex flex-row justify-between items-center gap-1">
             <Animated.Text

@@ -3,17 +3,17 @@ import { nanoid } from "@reduxjs/toolkit";
 
 const initialState = [
   {
-    id: nanoid(),
+    _id: nanoid(),
     name: "Bench Press",
     targetMuscle: "Chest",
   },
   {
-    id: nanoid(),
+    _id: nanoid(),
     name: "Pull Up",
     targetMuscle: "Back",
   },
   {
-    id: nanoid(),
+    _id: nanoid(),
     name: "Dead Lift",
     targetMuscle: "Lower Back",
   },

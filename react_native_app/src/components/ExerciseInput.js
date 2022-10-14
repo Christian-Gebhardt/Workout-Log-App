@@ -1,19 +1,35 @@
 import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import React from "react";
 import ExerciseSetInput from "./ExerciseSetInput";
-import WorkoutMenuModal from "./WorkoutMenuModal";
-import { useDispatch } from "react-redux";
-import { addSet } from "../slices/workoutSlice";
+import WorkoutMenuModal from "./modals/WorkoutMenuModal";
 import { nanoid } from "@reduxjs/toolkit";
 
-export default function ExerciseInput({ exercise }) {
-  const dispatch = useDispatch();
+export default function ExerciseInput({ exercise, setWorkout }) {
+  // add set to exercise
+  const onAddSet = () => {
+    setWorkout((prevState) => ({
+      ...prevState,
+      exercises: prevState.exercises.map((e) =>
+        e._id === exercise._id
+          ? {
+              ...e,
+              prevSets: [
+                ...e.prevSets,
+                {
+                  prevPerformance: "-",
+                },
+              ],
+            }
+          : e
+      ),
+    }));
+  };
 
   return (
     <View>
       <View className="flex flex-row justify-between items-center p-2">
         <Text className="text-bold text-lg">{exercise.name}</Text>
-        <WorkoutMenuModal exercise={exercise} />
+        <WorkoutMenuModal exercise={exercise} setWorkout={setWorkout} />
       </View>
 
       <View className="flex-row">
@@ -24,15 +40,16 @@ export default function ExerciseInput({ exercise }) {
       </View>
       {exercise.prevSets?.map((set, i) => (
         <ExerciseSetInput
-          key={set.id ? set.id : nanoid()}
+          key={i}
           exercise={exercise}
+          setWorkout={setWorkout}
           set={set}
           idx={i}
         />
       ))}
       <Pressable
         className="rounded-full px-2 m-4 shadow-md bg-gray-400"
-        onPress={() => dispatch(addSet(exercise))}
+        onPress={() => onAddSet()}
       >
         <Text className="text-bold text-sm text-center text-white">
           Add Set

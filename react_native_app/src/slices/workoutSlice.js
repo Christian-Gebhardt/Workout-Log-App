@@ -3,36 +3,7 @@ import { createSlice, nanoid } from "@reduxjs/toolkit";
 const initialState = {
   name: "Push Workout",
   notes: "",
-  exercises: [
-    {
-      id: nanoid(),
-      name: "Bench Press",
-      prevSets: [
-        {
-          id: nanoid(),
-          prevPerformance: "5 x 80kg",
-        },
-        {
-          id: nanoid(),
-          prevPerformance: "5 x 80kg",
-        },
-      ],
-    },
-    {
-      id: nanoid(),
-      name: "Pull Up",
-      prevSets: [
-        {
-          id: nanoid(),
-          prevPerformance: "12",
-        },
-        {
-          id: nanoid(),
-          prevPerformance: "10",
-        },
-      ],
-    },
-  ],
+  exercises: [],
 };
 
 const workoutSlice = createSlice({

@@ -1,4 +1,4 @@
-import { View, Text, Pressable, TouchableHighlight } from "react-native";
+import { View, Text, TouchableHighlight } from "react-native";
 import { Info } from "react-native-feather";
 import React from "react";
 
@@ -19,7 +19,6 @@ export default function ExerciseItem({ exercise }) {
         className="mx-2 mt-1"
         activeOpacity={0.6}
         underlayColor="#DDDDDD"
-        onPress={() => alert("Pressed!")}
       >
         <Info />
       </TouchableHighlight>

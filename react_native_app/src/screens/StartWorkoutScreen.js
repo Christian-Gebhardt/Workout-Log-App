@@ -1,10 +1,10 @@
 import { SafeAreaView, ScrollView, View, Text } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, Pressable } from "react-native";
 import WorkoutCard from "../components/WorkoutCard";
-import WorkoutInfoModal from "../components/WorkoutInfoModal";
+import WorkoutInfoModal from "../components/modals/WorkoutInfoModal";
 import { Divider } from "@rneui/themed";
-import ActiveWorkoutModal from "../components/ActiveWorkoutModal";
+import ActiveWorkoutModal from "../components/modals/ActiveWorkoutModal";
 import { useDispatch, useSelector } from "react-redux";
 import { setShowWorkoutInfoModal } from "../slices/modalSlice";
 

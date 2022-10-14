@@ -4,23 +4,25 @@ import WorkoutCard from "./WorkoutCard";
 import { Plus } from "react-native-feather";
 import { useDispatch, useSelector } from "react-redux";
 import { setShowWorkoutEditModal } from "../slices/modalSlice";
-import WorkoutEditModal from "./WorkoutEditModal";
+import WorkoutEditModal from "./modals/WorkoutEditModal";
 
-export default function RoutineContainer() {
+export default function RoutineContainer(item) {
   const dispatch = useDispatch();
 
-  const workouts = useSelector((state) => state.workoutHistory);
+  const { routine } = item;
 
   return (
     <View className="flex items-center">
-      <Text className="text-bold text-xl">Push Pull Legs</Text>
+      <Text className="text-bold text-xl">
+        {routine.name ? routine.name : "undefined"}
+      </Text>
       <FlatList
-        data={workouts}
+        data={routine ? routine.workouts : []}
         renderItem={({ item }) => <WorkoutCard workout={item} small={true} />}
         keyExtractor={(item) => item.id}
         numColumns={2}
         scrollEnabled={false}
-      ></FlatList>
+      />
       <Pressable
         className="rounded-full px-4 py-2 m-4 shadow-md bg-blue-600"
         onPress={() => dispatch(setShowWorkoutEditModal(true))}
@@ -32,7 +34,7 @@ export default function RoutineContainer() {
           <Plus color="white" />
         </View>
       </Pressable>
-      <WorkoutEditModal />
+      <WorkoutEditModal routineId={routine._id} />
     </View>
   );
 }

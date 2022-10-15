@@ -2,16 +2,12 @@ import { SafeAreaView, ScrollView, View, Text } from "react-native";
 import React from "react";
 import { StyleSheet, Pressable } from "react-native";
 import WorkoutCard from "../components/WorkoutCard";
-import WorkoutInfoModal from "../components/modals/WorkoutInfoModal";
 import { Divider } from "@rneui/themed";
-import ActiveWorkoutModal from "../components/modals/ActiveWorkoutModal";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setShowWorkoutInfoModal } from "../slices/modalSlice";
 
 export default function StartWorkoutScreen() {
   const dispatch = useDispatch();
-
-  const exercises = useSelector((state) => state.availableExercises);
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -42,8 +38,6 @@ export default function StartWorkoutScreen() {
             </Pressable>
           </View>
         </View>
-        <WorkoutInfoModal exercises={exercises} />
-        <ActiveWorkoutModal />
       </ScrollView>
     </SafeAreaView>
   );

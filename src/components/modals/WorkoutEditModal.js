@@ -18,7 +18,7 @@ import ExerciseAddModal from "./ExerciseAddModal";
 import ExerciseInput from "../ExerciseInput";
 import { useAddWorkoutToRoutineMutation } from "../../services/routineService";
 
-export default function WorkoutEditModal({ routineId, existingWorkout }) {
+export default function WorkoutEditModal({ existingWorkout }) {
   const showWorkoutEditModal = useSelector(selectShowWorkoutEditModal);
   const dispatch = useDispatch();
 
@@ -44,7 +44,6 @@ export default function WorkoutEditModal({ routineId, existingWorkout }) {
   };
 
   const onSaveWorkout = async () => {
-    console.log(routineId, workout);
     const res = await addWorkoutToRoutine({
       id: routineId,
       workout,
@@ -100,11 +99,11 @@ export default function WorkoutEditModal({ routineId, existingWorkout }) {
                 />
               ))}
               <View className="flex justify-center items-center gap-4 m-2">
-                <TouchableOpacity className="w-8/12 rounded-full px-4 py-3 shadow-md bg-blue-600">
-                  <Text
-                    className="text-bold text-base text-center text-white"
-                    onPress={() => dispatch(setShowExerciseAddModal(true))}
-                  >
+                <TouchableOpacity
+                  className="w-8/12 rounded-full px-4 py-3 shadow-md bg-blue-600"
+                  onPress={() => dispatch(setShowExerciseAddModal(true))}
+                >
+                  <Text className="text-bold text-base text-center text-white">
                     Add Exercise
                   </Text>
                 </TouchableOpacity>

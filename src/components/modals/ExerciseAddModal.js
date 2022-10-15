@@ -15,7 +15,6 @@ import {
 import ExerciseItem from "../ExerciseItem";
 import { Divider } from "@rneui/themed";
 import { Search } from "react-native-feather";
-import { nanoid } from "@reduxjs/toolkit";
 import { useGetExercisesQuery } from "../../services/exerciseService";
 
 export default function ExerciseAddModal({ setWorkout }) {
@@ -29,7 +28,7 @@ export default function ExerciseAddModal({ setWorkout }) {
     exercises.map((e) => ({ ...e, isSelected: false }))
   );
 
-  // method to unselect exercises
+  // reset/unselect all exercises
   const resetSelectedExercises = () => {
     setSelectedExercises(
       selectedExercises.map((e) => ({ ...e, isSelected: false }))
@@ -49,9 +48,9 @@ export default function ExerciseAddModal({ setWorkout }) {
     const newExercises = [...selectedExercises].reduce((arr, e) => {
       if (e.isSelected)
         arr.push({
-          _id: nanoid(),
           name: e.name,
-          prevSets: [],
+          exercise: e._id,
+          sets: [],
         });
       return arr;
     }, []);

@@ -23,16 +23,6 @@ export function ActiveWorkoutModal() {
 
   const workout = useSelector((state) => state.workout);
 
-  const navigation = useNavigation();
-  useLayoutEffect(() => {
-    navigation.setOptions(
-      {
-        headerShown: false,
-      },
-      []
-    );
-  });
-
   const saveWorkout = () => {};
 
   return (

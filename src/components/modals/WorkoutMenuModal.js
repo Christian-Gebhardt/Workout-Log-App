@@ -9,7 +9,7 @@ import {
 import React, { useState, useRef } from "react";
 import { Delete, List, Repeat } from "react-native-feather";
 
-export default function WorkoutMenuModal({ exercise, setWorkout, idx }) {
+export default function WorkoutMenuModal({ setWorkout, idx }) {
   const [visible, setVisible] = useState(false);
 
   const buttonRef = useRef();

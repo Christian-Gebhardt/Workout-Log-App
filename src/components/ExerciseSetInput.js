@@ -31,7 +31,7 @@ export default function ExerciseSetInput({ exercise, setWorkout, set, idx }) {
           exercise._id === e._id
             ? {
                 ...e,
-                prevSets: e.prevSets.filter((s, i) => i !== idx),
+                sets: e.sets.filter((s, i) => i !== idx),
               }
             : e
         ),

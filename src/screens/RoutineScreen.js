@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, Pressable, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
+} from "react-native";
 import React, { useLayoutEffect, useState } from "react";
 import RoutineContainer from "../components/RoutineContainer";
 import { useNavigation } from "@react-navigation/native";
@@ -12,6 +18,7 @@ import {
   useGetRoutinesQuery,
 } from "../services/routineService";
 import { useGetExercisesQuery } from "../services/exerciseService";
+import { nanoid } from "@reduxjs/toolkit";
 
 export default function RoutineScreen() {
   const navigation = useNavigation();
@@ -38,17 +45,17 @@ export default function RoutineScreen() {
         <FlatList
           data={routines ? routines : []}
           renderItem={({ item }) => <RoutineContainer routine={item} />}
-          keyExtractor={(item) => item._id}
+          keyExtractor={(item) => (item._id ? item._id : nanoid())}
         />
       </View>
-      <Pressable
+      <TouchableOpacity
         className="rounded-full p-2 m-6 shadow-md bg-lime-600 w-1/2 self-center"
         onPress={() => dispatch(setShowRoutineEditModal(true))}
       >
         <Text className="text-bold text-base text-center text-white">
           Add new routine
         </Text>
-      </Pressable>
+      </TouchableOpacity>
       <RoutineEditModal />
     </View>
   );
@@ -56,6 +63,7 @@ export default function RoutineScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white">
       <FlatList
+        data={[]}
         scrollEnabled={true}
         ListEmptyComponent={RoutineScreenNested}
       ></FlatList>

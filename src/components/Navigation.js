@@ -19,6 +19,9 @@ import {
   setIsAuthenticated,
   setUser,
 } from "../slices/userSlice";
+import WorkoutEditModal from "./modals/WorkoutEditModal";
+import WorkoutInfoModal from "./modals/WorkoutInfoModal";
+import ActiveWorkoutModal from "./modals/ActiveWorkoutModal";
 
 const Tabs = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -57,58 +60,65 @@ export default function Navigation() {
   }, [data, isError]);
 
   return (
-    <NavigationContainer>
-      {!isLoading ? (
-        isAuthenticated ? (
-          <Tabs.Navigator>
-            <Tabs.Screen
-              name="Routines"
-              component={RoutineScreen}
-              options={{
-                tabBarIcon: ({ color, size }) => (
-                  <Star color={color} size={size} />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="History"
-              component={HistoryScreen}
-              options={{
-                tabBarIcon: ({ color, size }) => (
-                  <Activity color={color} size={size} />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="Workout"
-              component={StartWorkoutScreen}
-              options={{
-                tabBarIcon: ({ color, size }) => (
-                  <Play color={color} size={size} />
-                ),
-              }}
-            />
-            <Tabs.Screen
-              name="Profile"
-              component={ProfileScreen}
-              options={{
-                tabBarIcon: ({ color, size }) => (
-                  <User color={color} size={size} />
-                ),
-              }}
-            />
-          </Tabs.Navigator>
+    <React.Fragment>
+      <NavigationContainer>
+        {!isLoading ? (
+          isAuthenticated ? (
+            <Tabs.Navigator>
+              <Tabs.Screen
+                name="Routines"
+                component={RoutineScreen}
+                options={{
+                  tabBarIcon: ({ color, size }) => (
+                    <Star color={color} size={size} />
+                  ),
+                }}
+              />
+              <Tabs.Screen
+                name="History"
+                component={HistoryScreen}
+                options={{
+                  tabBarIcon: ({ color, size }) => (
+                    <Activity color={color} size={size} />
+                  ),
+                }}
+              />
+              <Tabs.Screen
+                name="Workout"
+                component={StartWorkoutScreen}
+                options={{
+                  tabBarIcon: ({ color, size }) => (
+                    <Play color={color} size={size} />
+                  ),
+                }}
+              />
+              <Tabs.Screen
+                name="Profile"
+                component={ProfileScreen}
+                options={{
+                  tabBarIcon: ({ color, size }) => (
+                    <User color={color} size={size} />
+                  ),
+                }}
+              />
+            </Tabs.Navigator>
+          ) : (
+            <Stack.Navigator>
+              <Stack.Screen name="Login" component={LoginScreen} />
+              <Stack.Screen name="Register" component={RegisterScreen} />
+            </Stack.Navigator>
+          )
         ) : (
-          <Stack.Navigator>
-            <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Register" component={RegisterScreen} />
-          </Stack.Navigator>
-        )
-      ) : (
-        <View className="flex-1 justify-center">
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
-      )}
-    </NavigationContainer>
+          <View className="flex-1 justify-center">
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        )}
+      </NavigationContainer>
+      <React.Fragment>
+        <WorkoutEditModal />
+        <WorkoutInfoModal />
+        <ActiveWorkoutModal />
+      </React.Fragment>
+    </React.Fragment>
   );
 }

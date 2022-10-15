@@ -1,22 +1,16 @@
 import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
 import React from "react";
 import ExerciseSetInput from "./ExerciseSetInput";
-import WorkoutMenuModal from "./modals/WorkoutMenuModal";
+import WorkoutMenuModal from "./WorkoutMenuDropdown";
+import { addEditWorkoutSet } from "../slices/workoutSlice";
+import { useDispatch } from "react-redux";
 
-export default function ExerciseInput({ exercise, setWorkout, idx }) {
+export default function ExerciseInput({ exercise, setWorkout, indexExercise }) {
+  const dispatch = useDispatch();
+
   // add set to exercise
   const onAddSet = () => {
-    setWorkout((prevState) => ({
-      ...prevState,
-      exercises: prevState.exercises.map((e, i) =>
-        i === idx
-          ? {
-              ...e,
-              sets: [...e.sets, {}],
-            }
-          : e
-      ),
-    }));
+    dispatch(addEditWorkoutSet(indexExercise));
   };
 
   return (
@@ -26,7 +20,7 @@ export default function ExerciseInput({ exercise, setWorkout, idx }) {
         <WorkoutMenuModal
           exercise={exercise}
           setWorkout={setWorkout}
-          idx={idx}
+          indexExercise={indexExercise}
         />
       </View>
 
@@ -40,9 +34,9 @@ export default function ExerciseInput({ exercise, setWorkout, idx }) {
         <ExerciseSetInput
           key={i}
           exercise={exercise}
-          setWorkout={setWorkout}
           set={set}
-          idx={i}
+          indexExercise={indexExercise}
+          indexSet={i}
         />
       ))}
       <Pressable

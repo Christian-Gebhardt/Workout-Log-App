@@ -26,7 +26,7 @@ export default function HistoryScreen() {
           <Text className="text-center text-bold text-2xl">History Screen</Text>
           <Divider style={styles.divider} />
         </View>
-        <View>
+        <View className="flex justify-center items-center">
           {prevWorkouts.map((e, i) => (
             <WorkoutCard workout={e} key={i} />
           ))}

@@ -9,34 +9,39 @@ import {
 import React, { useRef, useState } from "react";
 import { Swipeable } from "react-native-gesture-handler";
 import { Delete } from "react-native-feather";
+import { useDispatch } from "react-redux";
+import { removeEditWorkoutSet } from "../slices/workoutSlice";
 
-export default function ExerciseSetInput({ exercise, setWorkout, set, idx }) {
+export default function ExerciseSetInput({
+  exercise,
+  set,
+  indexExercise,
+  indexSet,
+}) {
   const swipeableRef = useRef(null);
+
+  const dispatch = useDispatch();
 
   const [weight, onChangeWeight] = useState(null);
   const [repCount, onChangeRepCount] = useState(null);
 
+  const onRemoveSet = () => {
+    swipeableRef.current.close();
+    dispatch(
+      removeEditWorkoutSet({
+        indexExercise,
+        indexSet,
+      })
+    );
+  };
+
+  // drag component to remove set
   const renderRightActions = (progress, dragX) => {
     const scale = dragX.interpolate({
       inputRange: [-80, 0],
       outputRange: [1, 0],
       extrapolate: "clamp",
     });
-
-    const onRemoveSet = () => {
-      swipeableRef.current.close();
-      setWorkout((prevState) => ({
-        ...prevState,
-        exercises: prevState.exercises.map((e) =>
-          exercise._id === e._id
-            ? {
-                ...e,
-                sets: e.sets.filter((s, i) => i !== idx),
-              }
-            : e
-        ),
-      }));
-    };
 
     return (
       <Pressable onPress={() => onRemoveSet()}>
@@ -57,7 +62,7 @@ export default function ExerciseSetInput({ exercise, setWorkout, set, idx }) {
   return (
     <Swipeable ref={swipeableRef} renderRightActions={renderRightActions}>
       <View className="flex-row py-1">
-        <Text style={styles.setCell}>{idx + 1}</Text>
+        <Text style={styles.setCell}>{indexSet + 1}</Text>
         <Text style={styles.prevCell}>
           {set.prevPerformance ? set.prevPerformance : "-"}
         </Text>

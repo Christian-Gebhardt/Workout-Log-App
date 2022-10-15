@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  showActiveWorkoutModal: false,
-  showWorkoutInfoModal: false,
-  showWorkoutEditModal: false,
-  showWorkoutMenuModal: false,
-  showExerciseAddModal: false,
-  showRoutineEditModal: false,
+  activeWorkoutModal: { show: false },
+  workoutInfoModal: { show: false },
+  workoutEditModal: { show: false, routineId: null },
+  exerciseAddModal: { show: false },
+  routineEditModal: { show: false },
 };
 
 export const modalSlice = createSlice({
@@ -14,22 +13,22 @@ export const modalSlice = createSlice({
   initialState,
   reducers: {
     setShowActiveWorkoutModal: (state, action) => {
-      state.showActiveWorkoutModal = action.payload;
+      state.activeWorkoutModal.show = action.payload;
     },
     setShowWorkoutInfoModal: (state, action) => {
-      state.showWorkoutInfoModal = action.payload;
+      state.workoutInfoModal.show = action.payload;
     },
     setShowWorkoutEditModal: (state, action) => {
-      state.showWorkoutEditModal = action.payload;
-    },
-    setShowWorkoutMenuModal: (state, action) => {
-      state.showWorkoutMenuModal = action.payload;
+      state.workoutEditModal.show = action.payload;
     },
     setShowExerciseAddModal: (state, action) => {
-      state.showExerciseAddModal = action.payload;
+      state.exerciseAddModal.show = action.payload;
     },
     setShowRoutineEditModal: (state, action) => {
-      state.showRoutineEditModal = action.payload;
+      state.routineEditModal.show = action.payload;
+    },
+    setWorkoutEditModalRoutineId: (state, action) => {
+      state.workoutEditModal.routineId = action.payload;
     },
   },
 });
@@ -39,23 +38,23 @@ export const {
   setShowActiveWorkoutModal,
   setShowWorkoutInfoModal,
   setShowWorkoutEditModal,
-  setShowWorkoutMenuModal,
   setShowExerciseAddModal,
   setShowRoutineEditModal,
+  setWorkoutEditModalRoutineId,
 } = modalSlice.actions;
 
 // selectors
 export const selectShowActiveWorkoutModal = (state) =>
-  state.modal.showActiveWorkoutModal;
+  state.modal.activeWorkoutModal.show;
 export const selectShowWorkoutInfoModal = (state) =>
-  state.modal.showWorkoutInfoModal;
+  state.modal.workoutInfoModal.show;
 export const selectShowWorkoutEditModal = (state) =>
-  state.modal.showWorkoutEditModal;
-export const selectShowWorkoutMenuModal = (state) =>
-  state.modal.showWorkoutMenuModal;
+  state.modal.workoutEditModal.show;
 export const selectShowExerciseAddModal = (state) =>
-  state.modal.showExerciseAddModal;
+  state.modal.exerciseAddModal.show;
 export const selectShowRoutineEditModal = (state) =>
-  state.modal.showRoutineEditModal;
+  state.modal.routineEditModal.show;
+export const selectWorkoutEditModalRoutineId = (state) =>
+  state.modal.workoutEditModal.routineId;
 
 export default modalSlice.reducer;

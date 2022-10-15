@@ -7,58 +7,53 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectShowWorkoutEditModal,
+  selectWorkoutEditModalRoutineId,
   setShowExerciseAddModal,
 } from "../../slices/modalSlice";
 import { setShowWorkoutEditModal } from "../../slices/modalSlice";
-import ExerciseAddModal from "./ExerciseAddModal";
 import ExerciseInput from "../ExerciseInput";
 import { useAddWorkoutToRoutineMutation } from "../../services/routineService";
+import {
+  resetEditWorkout,
+  selectEditWorkout,
+  setEditWorkoutName,
+  setEditWorkoutNotes,
+} from "../../slices/workoutSlice";
+import ExerciseAddModal from "./ExerciseAddModal";
 
-export default function WorkoutEditModal({ existingWorkout }) {
+export default function WorkoutEditModal() {
   const showWorkoutEditModal = useSelector(selectShowWorkoutEditModal);
+
+  const workout = useSelector(selectEditWorkout);
   const dispatch = useDispatch();
 
   const [addWorkoutToRoutine] = useAddWorkoutToRoutineMutation();
 
-  const [workout, setWorkout] = useState(
-    existingWorkout
-      ? existingWorkout
-      : {
-          name: "",
-          notes: "",
-          exercises: [],
-        }
-  );
+  const routineId = useSelector(selectWorkoutEditModalRoutineId);
 
   const { name, notes, exercises } = workout;
 
   const onChange = (name) => (value) => {
-    setWorkout((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    if (name === "name") dispatch(setEditWorkoutName(value));
+    if (name === "notes") dispatch(setEditWorkoutNotes(value));
   };
 
-  const onSaveWorkout = async () => {
-    const res = await addWorkoutToRoutine({
+  const onSaveWorkout = () => {
+    addWorkoutToRoutine({
       id: routineId,
       workout,
     });
-    console.log(res);
     dispatch(setShowWorkoutEditModal(false));
   };
 
+  // reset editWorkout in global state
   const onCancel = () => {
+    dispatch(resetEditWorkout);
     dispatch(setShowWorkoutEditModal(!showWorkoutEditModal));
-    setWorkout({
-      name: "",
-      notes: "",
-      exercises: [],
-    });
   };
 
   return (
@@ -71,6 +66,7 @@ export default function WorkoutEditModal({ existingWorkout }) {
         dispatch(setShowWorkoutEditModal(!showWorkoutEditModal));
       }}
     >
+      <ExerciseAddModal />
       <SafeAreaView>
         <ScrollView className="flex flex-1">
           <View className="flex-1">
@@ -91,12 +87,7 @@ export default function WorkoutEditModal({ existingWorkout }) {
                 multiline={true}
               />
               {exercises?.map((e, i) => (
-                <ExerciseInput
-                  key={i}
-                  exercise={e}
-                  idx={i}
-                  setWorkout={setWorkout}
-                />
+                <ExerciseInput key={i} exercise={e} indexExercise={i} />
               ))}
               <View className="flex justify-center items-center gap-4 m-2">
                 <TouchableOpacity
@@ -128,7 +119,6 @@ export default function WorkoutEditModal({ existingWorkout }) {
           </View>
         </ScrollView>
       </SafeAreaView>
-      <ExerciseAddModal setWorkout={setWorkout} />
     </Modal>
   );
 }

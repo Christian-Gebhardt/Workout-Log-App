@@ -22,6 +22,8 @@ import {
 import WorkoutEditModal from "./modals/WorkoutEditModal";
 import WorkoutInfoModal from "./modals/WorkoutInfoModal";
 import ActiveWorkoutModal from "./modals/ActiveWorkoutModal";
+import RoutineEditModal from "./modals/RoutineEditModal";
+import ExerciseAddModal from "./modals/ExerciseAddModal";
 
 const Tabs = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -118,6 +120,7 @@ export default function Navigation() {
         <WorkoutEditModal />
         <WorkoutInfoModal />
         <ActiveWorkoutModal />
+        <RoutineEditModal />
       </React.Fragment>
     </React.Fragment>
   );

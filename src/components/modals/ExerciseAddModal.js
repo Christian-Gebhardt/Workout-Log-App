@@ -6,7 +6,7 @@ import {
   Pressable,
   TextInput,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectShowExerciseAddModal,
@@ -16,36 +16,42 @@ import ExerciseItem from "../ExerciseItem";
 import { Divider } from "@rneui/themed";
 import { Search } from "react-native-feather";
 import { useGetExercisesQuery } from "../../services/exerciseService";
+import { addEditWorkoutExercises } from "../../slices/workoutSlice";
 
-export default function ExerciseAddModal({ setWorkout }) {
+export default function ExerciseAddModal() {
   const showExerciseAddModal = useSelector(selectShowExerciseAddModal);
   const dispatch = useDispatch();
 
   const { data: exercises } = useGetExercisesQuery();
 
   const [searchInput, setSearchInput] = useState("");
-  const [selectedExercises, setSelectedExercises] = useState(
-    exercises.map((e) => ({ ...e, isSelected: false }))
-  );
+  const [selectableExercises, setSelectableExercises] = useState([]);
+
+  // init selectable Exercises once available exercises are fetched from the api
+  useEffect(() => {
+    setSelectableExercises(
+      exercises ? exercises?.map((e) => ({ ...e, isSelected: false })) : []
+    );
+  }, [exercises]);
 
   // reset/unselect all exercises
-  const resetSelectedExercises = () => {
-    setSelectedExercises(
-      selectedExercises.map((e) => ({ ...e, isSelected: false }))
+  const resetSelectableExercises = () => {
+    setSelectableExercises(
+      selectableExercises.map((e) => ({ ...e, isSelected: false }))
     );
   };
 
-  // add exercise that was selected to selectedExercises
-  const updateSelectedExercises = (exercise) => {
-    const updatedSelectedExercises = [...selectedExercises].map((e) =>
+  // add exercise that was selected to selectableExercises
+  const updateSelectableExercises = (exercise) => {
+    const updatedSelectableExercises = [...selectableExercises].map((e) =>
       exercise._id === e._id ? { ...e, isSelected: !e.isSelected } : e
     );
-    setSelectedExercises(updatedSelectedExercises);
+    setSelectableExercises(updatedSelectableExercises);
   };
 
   // add all selected exercises to workout, reselect exercises and close modal
   const addExercises = () => {
-    const newExercises = [...selectedExercises].reduce((arr, e) => {
+    const newExercises = [...selectableExercises].reduce((arr, e) => {
       if (e.isSelected)
         arr.push({
           name: e.name,
@@ -54,13 +60,9 @@ export default function ExerciseAddModal({ setWorkout }) {
         });
       return arr;
     }, []);
-    setWorkout((prevState) => ({
-      ...prevState,
-      exercises: [...prevState.exercises, ...newExercises],
-    }));
-
+    dispatch(addEditWorkoutExercises(newExercises));
+    resetSelectableExercises();
     dispatch(setShowExerciseAddModal(!showExerciseAddModal));
-    resetSelectedExercises();
   };
 
   return (
@@ -91,8 +93,8 @@ export default function ExerciseAddModal({ setWorkout }) {
 
           <View className="flex flex-col justify-between my-4">
             <Divider />
-            {selectedExercises?.map((e, i) => (
-              <Pressable key={i} onPress={() => updateSelectedExercises(e)}>
+            {selectableExercises.map((e, i) => (
+              <Pressable key={i} onPress={() => updateSelectableExercises(e)}>
                 <View>
                   <ExerciseItem exercise={e} />
                   <Divider />
@@ -105,7 +107,7 @@ export default function ExerciseAddModal({ setWorkout }) {
               className="rounded-full p-2 m-6 shadow-md bg-red-600"
               onPress={() => {
                 dispatch(setShowExerciseAddModal(!showExerciseAddModal));
-                resetSelectedExercises();
+                resetSelectableExercises();
               }}
             >
               <Text className="text-bold text-base text-center text-white">

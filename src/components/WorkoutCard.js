@@ -4,12 +4,12 @@ import { StyleSheet } from "react-native";
 import { AlignJustify } from "react-native-feather";
 import { Divider } from "@rneui/themed";
 
-export default function WorkoutCard({ workout, small }) {
+export default function WorkoutCard({ fullwidth, workout, small }) {
   return (
     <View
       className="flex-1 border-2 border-stone-300 rounded-xl m-2 p-2"
       style={{
-        maxWidth: "42.5%",
+        maxWidth: !fullwidth ? "42.5%" : "100%",
       }}
     >
       <View className="flex flex-row justify-between items-center gap-2 my-2">

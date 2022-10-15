@@ -3,15 +3,24 @@ import React from "react";
 import WorkoutCard from "./WorkoutCard";
 import { Plus } from "react-native-feather";
 import { useDispatch } from "react-redux";
-import { setShowWorkoutEditModal } from "../slices/modalSlice";
-import WorkoutEditModal from "./modals/WorkoutEditModal";
+import {
+  setShowWorkoutEditModal,
+  setWorkoutEditModalRoutineId,
+} from "../slices/modalSlice";
 import { Dimensions } from "react-native";
 import { nanoid } from "@reduxjs/toolkit";
+import { setEditWorkout } from "../slices/workoutSlice";
 
 export default function RoutineContainer({ routine }) {
   const dispatch = useDispatch();
 
   const viewportWidth = Dimensions.get("window").width;
+
+  // show empty workout model to add new workout
+  const onShowEmptyWorkoutEditModal = () => {
+    dispatch(setWorkoutEditModalRoutineId(routine._id));
+    dispatch(setShowWorkoutEditModal(true));
+  };
 
   return (
     <View className="flex w-full items-center">
@@ -31,7 +40,7 @@ export default function RoutineContainer({ routine }) {
       />
       <TouchableOpacity
         className="rounded-full px-4 py-2 m-4 shadow-md bg-blue-600"
-        onPress={() => dispatch(setShowWorkoutEditModal(true))}
+        onPress={() => onShowEmptyWorkoutEditModal()}
       >
         <View className="flex flex-row justify-between items-center gap-1">
           <Text className="text-bold text-base text-center text-white">

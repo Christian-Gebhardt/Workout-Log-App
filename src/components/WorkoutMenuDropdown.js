@@ -8,9 +8,12 @@ import {
 } from "react-native";
 import React, { useState, useRef } from "react";
 import { Delete, List, Repeat } from "react-native-feather";
+import { useDispatch } from "react-redux";
+import { removeEditWorkoutExercise } from "../slices/workoutSlice";
 
-export default function WorkoutMenuModal({ setWorkout, idx }) {
+export default function WorkoutMenuDropdown({ indexExercise }) {
   const [visible, setVisible] = useState(false);
+  const dispatch = useDispatch();
 
   const buttonRef = useRef();
 
@@ -43,14 +46,6 @@ export default function WorkoutMenuModal({ setWorkout, idx }) {
     },
   ];
 
-  const onRemoveExercise = () => {
-    setWorkout((prevState) => ({
-      ...prevState,
-      exercises: prevState.exercises.filter((e, i) => i !== idx),
-    }));
-    setVisible(false);
-  };
-
   const openMenu = () => {
     buttonRef.current.measure((_fx, _fy, w, h, px, py) => {
       setMenuPosition({
@@ -59,6 +54,12 @@ export default function WorkoutMenuModal({ setWorkout, idx }) {
       });
     });
     setVisible(true);
+  };
+
+  const onRemoveExercise = () => {
+    console.log(indexExercise);
+    dispatch(removeEditWorkoutExercise(indexExercise));
+    setVisible(false);
   };
 
   return (

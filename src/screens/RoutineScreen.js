@@ -5,26 +5,20 @@ import {
   TouchableOpacity,
   FlatList,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect } from "react";
 import RoutineContainer from "../components/RoutineContainer";
 import { useNavigation } from "@react-navigation/native";
 import { Divider } from "@rneui/themed";
 import { SafeAreaView } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setShowRoutineEditModal } from "../slices/modalSlice";
-import RoutineEditModal from "../components/modals/RoutineEditModal";
-import {
-  useAddRoutineMutation,
-  useGetRoutinesQuery,
-} from "../services/routineService";
-import { useGetExercisesQuery } from "../services/exerciseService";
+import { useGetRoutinesQuery } from "../services/routineService";
 import { nanoid } from "@reduxjs/toolkit";
 
 export default function RoutineScreen() {
   const navigation = useNavigation();
 
   const { data: routines } = useGetRoutinesQuery();
-  const { data: availableExercises } = useGetExercisesQuery();
 
   const dispatch = useDispatch();
 
@@ -56,7 +50,6 @@ export default function RoutineScreen() {
           Add new routine
         </Text>
       </TouchableOpacity>
-      <RoutineEditModal />
     </View>
   );
 

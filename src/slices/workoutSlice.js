@@ -1,72 +1,117 @@
-import { createSlice, nanoid } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  name: "Push Workout",
-  notes: "",
-  exercises: [],
+  activeWorkout: {
+    name: "",
+    notes: "",
+    exercises: [],
+  },
+  editWorkout: {
+    name: "",
+    notes: "",
+    exercises: [],
+  },
 };
 
 const workoutSlice = createSlice({
   name: "workout",
   initialState,
   reducers: {
-    setName: (state, action) => {
-      state.name = action.payload;
+    // activeWorkout reducers
+    setActiveWorkout: (state, action) => {
+      state.activeWorkout = action.payload;
     },
-    setNotes: (state, action) => {
-      state.notes = action.payload;
+    setActiveWorkoutName: (state, action) => {
+      state.activeWorkout.name = action.payload;
     },
-    setExercises: (state, action) => {
-      state.exercises = action.payload;
+    setActiveWorkoutNotes: (state, action) => {
+      state.activeWorkout.notes = action.payload;
     },
-    addExercises: {
-      reducer: (state, action) => {
-        action.payload.forEach((e) => state.exercises.push(e));
-      },
-      prepare: (exercises) => {
-        return {
-          payload: exercises.map((e) => ({ ...e, id: nanoid() })),
-        };
-      },
+    addActiveWorkoutExercises: (state, action) => {
+      action.payload.forEach((e) => state.activeWorkout.exercises.push(e));
     },
-    removeExercise: (state, action) => {
-      state.exercises = state.exercises.filter(
-        (e) => e.id !== action.payload.id
+    removeActiveWorkoutExercise: (state, action) => {
+      state.activeWorkout.exercises = state.activeWorkout.exercises.filter(
+        (_, i) => action.payload !== i
       );
     },
-    addSet: (state, action) => {
-      state.exercises
-        .find((e) => e.id === action.payload.id)
-        .prevSets.push({
-          id: nanoid(),
-          prevPerformance: "-",
-        });
+    addActiveWorkoutSet: (state, action) => {
+      state.activeWorkout.exercises
+        .find((_, i) => action.payload === i)
+        .sets.push({});
     },
-    removeSet: (state, action) => {
-      const updateExercise = state.exercises.find(
-        (e) => e.id === action.payload.exercise.id
+    removeActiveWorkoutSet: (state, action) => {
+      const updateExercise = state.activeWorkout.exercises.find(
+        (_, i) => action.payload.indexExercise === i
       );
       if (updateExercise) {
-        updateExercise.prevSets = updateExercise.prevSets.filter(
-          (s) => s.id !== action.payload.set.id
+        updateExercise.sets = updateExercise.sets.filter(
+          (_, i) => action.payload.indexSet === i
         );
       }
+    },
+    resetActiveWorkout: (state) => {
+      state.activeWorkout = initialState.activeWorkout;
+    },
+    // editWorkout reducers
+    setEditWorkout: (state, action) => {
+      state.editWorkout = action.payload;
+    },
+    setEditWorkoutName: (state, action) => {
+      state.editWorkout.name = action.payload;
+    },
+    setEditWorkoutNotes: (state, action) => {
+      state.editWorkout.notes = action.payload;
+    },
+    addEditWorkoutExercises: (state, action) => {
+      action.payload.forEach((e) => state.editWorkout.exercises.push(e));
+    },
+    removeEditWorkoutExercise: (state, action) => {
+      state.editWorkout.exercises = state.editWorkout.exercises.filter(
+        (_, i) => action.payload !== i
+      );
+    },
+    addEditWorkoutSet: (state, action) => {
+      state.editWorkout.exercises
+        .find((_, i) => action.payload === i)
+        .sets.push({});
+    },
+    removeEditWorkoutSet: (state, action) => {
+      const updateExercise = state.editWorkout.exercises.find(
+        (_, i) => action.payload.indexExercise === i
+      );
+      if (updateExercise) {
+        updateExercise.sets = updateExercise.sets.filter(
+          (_, i) => action.payload.indexSet === i
+        );
+      }
+    },
+    resetEditWorkout: (state) => {
+      state.editWorkout = initialState.editWorkout;
     },
   },
 });
 
 export const {
-  setName,
-  setNotes,
-  setExercises,
-  addExercises,
-  removeExercise,
-  addSet,
-  removeSet,
+  setActiveWorkout,
+  setActiveWorkoutName,
+  setActiveWorkoutNotes,
+  addActiveWorkoutExercises,
+  removeActiveWorkoutExercise,
+  addActiveWorkoutSet,
+  removeActiveWorkoutSet,
+  resetActiveWorkout,
+  setEditWorkout,
+  setEditWorkoutName,
+  setEditWorkoutNotes,
+  addEditWorkoutExercises,
+  removeEditWorkoutExercise,
+  addEditWorkoutSet,
+  removeEditWorkoutSet,
+  resetEditWorkout,
 } = workoutSlice.actions;
 
-export const selectName = (state) => state.workout.name;
-export const selectNotes = (state) => state.workout.notes;
-export const selectExercises = (state) => state.workout.exercises;
+export const selectActiveWorkout = (state) => state.workout.activeWorkout;
+export const selectEditWorkout = (state) => state.workout.editWorkout;
 
 export default workoutSlice.reducer;

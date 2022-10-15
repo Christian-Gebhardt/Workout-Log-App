@@ -1,20 +1,8 @@
-import {
-  View,
-  Modal,
-  Text,
-  StyleSheet,
-  Pressable,
-  TouchableOpacity,
-} from "react-native";
+import { View, Modal, Text, Pressable, TouchableOpacity } from "react-native";
 import React, { useState, useRef } from "react";
-import { Delete, List, Repeat } from "react-native-feather";
-import { useDispatch } from "react-redux";
-import { removeEditWorkoutExercise } from "../slices/workoutSlice";
+import { List } from "react-native-feather";
 
-export default function WorkoutMenuDropdown({ indexExercise }) {
-  const [visible, setVisible] = useState(false);
-  const dispatch = useDispatch();
-
+export default function MenuDropdown({ options, visible, setVisible }) {
   const buttonRef = useRef();
 
   const [menuPosition, setMenuPosition] = useState({
@@ -22,44 +10,16 @@ export default function WorkoutMenuDropdown({ indexExercise }) {
     left: 0,
   });
 
-  const options = [
-    {
-      name: "remove",
-      onPress: () => onRemoveExercise(),
-      icon: (
-        <Delete
-          width={styles.icon.width}
-          height={styles.icon.height}
-          color="red"
-        />
-      ),
-    },
-    {
-      name: "replace",
-      icon: (
-        <Repeat
-          width={styles.icon.width}
-          height={styles.icon.height}
-          color="gray"
-        />
-      ),
-    },
-  ];
-
   const openMenu = () => {
     buttonRef.current.measure((_fx, _fy, w, h, px, py) => {
-      setMenuPosition({
-        top: py + h,
-        right: w,
-      });
+      setMenuPosition(
+        {
+          top: py + h,
+          right: w,
+        },
+        setVisible(true)
+      );
     });
-    setVisible(true);
-  };
-
-  const onRemoveExercise = () => {
-    console.log(indexExercise);
-    dispatch(removeEditWorkoutExercise(indexExercise));
-    setVisible(false);
   };
 
   return (
@@ -104,10 +64,3 @@ export default function WorkoutMenuDropdown({ indexExercise }) {
     </TouchableOpacity>
   );
 }
-
-const styles = StyleSheet.create({
-  icon: {
-    width: 16,
-    height: 16,
-  },
-});

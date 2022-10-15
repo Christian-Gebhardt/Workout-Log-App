@@ -1,10 +1,39 @@
 import { View, Text, TouchableHighlight } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
-import { AlignJustify } from "react-native-feather";
+import { AlignJustify, Delete, Repeat } from "react-native-feather";
 import { Divider } from "@rneui/themed";
+import MenuDropdown from "./MenuDropdown";
 
 export default function WorkoutCard({ fullwidth, workout, small }) {
+  // for dropdown
+  const [visible, setVisible] = useState(false);
+
+  // pass options to menu modal with actions
+  const options = [
+    {
+      name: "remove",
+      onPress: () => {},
+      icon: (
+        <Delete
+          width={styles.icon.width}
+          height={styles.icon.height}
+          color="red"
+        />
+      ),
+    },
+    {
+      name: "replace",
+      icon: (
+        <Repeat
+          width={styles.icon.width}
+          height={styles.icon.height}
+          color="gray"
+        />
+      ),
+    },
+  ];
+
   return (
     <View
       className="flex-1 border-2 border-stone-300 rounded-xl m-2 p-2"
@@ -16,17 +45,11 @@ export default function WorkoutCard({ fullwidth, workout, small }) {
         <Text className={small ? "text-bold text-sm" : "text-bold text-xl"}>
           {workout ? workout.name : "Workout Name"}
         </Text>
-        <TouchableHighlight
-          activeOpacity={0.6}
-          underlayColor="#DDDDDD"
-          onPress={() => alert("Pressed!")}
-        >
-          <AlignJustify
-            style={styles.icon}
-            width={styles.icon.width}
-            height={styles.icon.height}
-          />
-        </TouchableHighlight>
+        <MenuDropdown
+          visible={visible}
+          setVisible={setVisible}
+          options={options}
+        />
       </View>
       <Divider />
       <View class={styles.container}>

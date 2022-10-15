@@ -1,26 +1,61 @@
-import { View, Text, Pressable, StyleSheet, TextInput } from "react-native";
+import { View, Text, Pressable, StyleSheet } from "react-native";
 import React from "react";
 import ExerciseSetInput from "./ExerciseSetInput";
-import WorkoutMenuModal from "./WorkoutMenuDropdown";
+import MenuDropdown from "./MenuDropdown";
 import { addEditWorkoutSet } from "../slices/workoutSlice";
 import { useDispatch } from "react-redux";
+import { removeEditWorkoutExercise } from "../slices/workoutSlice";
+import { Delete, Repeat } from "react-native-feather";
+import { useState } from "react";
 
-export default function ExerciseInput({ exercise, setWorkout, indexExercise }) {
+export default function ExerciseInput({ exercise, indexExercise }) {
   const dispatch = useDispatch();
 
+  // for dropdown
+  const [visible, setVisible] = useState(false);
   // add set to exercise
   const onAddSet = () => {
     dispatch(addEditWorkoutSet(indexExercise));
   };
 
+  const onRemoveExercise = (indexExercise) => {
+    dispatch(removeEditWorkoutExercise(indexExercise));
+    setVisible(false);
+  };
+
+  // pass options to menu modal with actions
+  const options = [
+    {
+      name: "remove",
+      onPress: onRemoveExercise.bind(this, indexExercise),
+      icon: (
+        <Delete
+          width={styles.icon.width}
+          height={styles.icon.height}
+          color="red"
+        />
+      ),
+    },
+    {
+      name: "replace",
+      icon: (
+        <Repeat
+          width={styles.icon.width}
+          height={styles.icon.height}
+          color="gray"
+        />
+      ),
+    },
+  ];
+
   return (
     <View>
       <View className="flex flex-row justify-between items-center p-2">
         <Text className="text-bold text-lg">{exercise.name}</Text>
-        <WorkoutMenuModal
-          exercise={exercise}
-          setWorkout={setWorkout}
-          indexExercise={indexExercise}
+        <MenuDropdown
+          visible={visible}
+          setVisible={setVisible}
+          options={options}
         />
       </View>
 
@@ -81,5 +116,9 @@ const styles = StyleSheet.create({
   kgCol: {
     flex: "25%",
     textAlign: "center",
+  },
+  icon: {
+    width: 16,
+    height: 16,
   },
 });

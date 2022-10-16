@@ -17,7 +17,7 @@ import { Dimensions } from "react-native";
 import MenuDropdown from "./MenuDropdown";
 import { useDeleteRoutineMutation } from "../services/routineService";
 
-export default function RoutineContainer({ routine }) {
+export default function RoutineContainer({ routine, isActiveRoutine }) {
   const dispatch = useDispatch();
 
   const viewportWidth = Dimensions.get("window").width;
@@ -61,7 +61,13 @@ export default function RoutineContainer({ routine }) {
   };
 
   return (
-    <View className="flex items-center border-2 rounded-lg border-slate-300 m-2">
+    <View
+      className={
+        !isActiveRoutine
+          ? "flex items-center border-2 rounded-lg border-slate-300 m-2"
+          : "flex items-center border-2 rounded-lg border-indigo-400 m-2"
+      }
+    >
       <View className="flex flex-row justify-between items-center gap-2 my-2">
         <Text className="text-bold text-2xl p-2">
           {routine.name ? routine.name : "undefined"}
@@ -81,7 +87,7 @@ export default function RoutineContainer({ routine }) {
         renderItem={({ item }) => (
           <WorkoutCard routineId={routine._id} workout={item} small={true} />
         )}
-        keyExtractor={(item) => (item._id ? item._id : nanoid())}
+        keyExtractor={(item, i) => (item._id ? item._id : i)}
         scrollEnabled={false}
         numColumns={2}
       />

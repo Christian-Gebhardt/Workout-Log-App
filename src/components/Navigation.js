@@ -7,7 +7,7 @@ import RegisterScreen from "../screens/RegisterScreen";
 import StartWorkoutScreen from "../screens/StartWorkoutScreen";
 import HistoryScreen from "../screens/HistoryScreen";
 import RoutineScreen from "../screens/RoutineScreen";
-import { useGetUserByIdQuery } from "../services/userService";
+import { useGetUserByIdQuery, useGetUserQuery } from "../services/userService";
 import { getValue } from "../util/localStorage";
 import { ActivityIndicator, View } from "react-native";
 import { Activity, Play, Star, User } from "react-native-feather";
@@ -23,7 +23,6 @@ import WorkoutEditModal from "./modals/WorkoutEditModal";
 import WorkoutInfoModal from "./modals/WorkoutInfoModal";
 import ActiveWorkoutModal from "./modals/ActiveWorkoutModal";
 import RoutineEditModal from "./modals/RoutineEditModal";
-import ExerciseAddModal from "./modals/ExerciseAddModal";
 
 const Tabs = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -34,7 +33,7 @@ export default function Navigation() {
 
   const user = useSelector(selectUser);
   const skip = user ? false : true;
-  const { data, isError, isLoading } = useGetUserByIdQuery({
+  const { data, isError, isLoading } = useGetUserQuery({
     skip,
   });
 

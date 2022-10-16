@@ -7,10 +7,28 @@ import { useDispatch } from "react-redux";
 import { setShowWorkoutInfoModal } from "../slices/modalSlice";
 import { useNavigation } from "@react-navigation/native";
 
+import { useGetRoutinesQuery } from "../services/routineService";
+import { useGetUserQuery } from "../services/userService";
+
 export default function StartWorkoutScreen() {
   const dispatch = useDispatch();
 
-  const routine = null;
+  // fetch active routine from cached user / api request
+  const { activeRoutineId } = useGetUserQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      activeRoutineId: data?.state.activeRoutine,
+    }),
+  });
+
+  const { activeRoutine } = useGetRoutinesQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      activeRoutine: data?.find((e) => e._id === activeRoutineId),
+    }),
+  });
+
+  const nextWorkout = activeRoutine.workouts.find(
+    (e) => e._id === activeRoutine.nextWorkout
+  );
 
   const viewportWidth = Dimensions.get("window").width;
 
@@ -32,30 +50,45 @@ export default function StartWorkoutScreen() {
         Next for your plan:
       </Text>
       <View className="flex-row justify-center">
-        <Pressable onPress={() => dispatch(setShowWorkoutInfoModal(true))}>
-          <WorkoutCard fullwidth={true} />
+        <Pressable
+          className="flex-1 items-center"
+          onPress={() => dispatch(setShowWorkoutInfoModal(true))}
+        >
+          <WorkoutCard
+            routineId={activeRoutineId}
+            workout={nextWorkout ? nextWorkout : null}
+          />
         </Pressable>
       </View>
 
       <Divider style={styles.divider} />
-      <View className="p-2 text-center">
-        <Text className="text-bold text-lg text-center p-2">
-          Workouts in your routine...
-        </Text>
+
+      <Text className="text-bold text-lg text-center p-2">
+        Workouts in your routine...
+      </Text>
+      <View className="flex justify-center items-center">
         <FlatList
+          data={activeRoutine ? activeRoutine.workouts : []}
+          renderItem={({ item }) => (
+            <Pressable
+              className="w-1/2"
+              onPress={() => dispatch(setShowWorkoutInfoModal(true))}
+            >
+              <WorkoutCard
+                routineId={activeRoutineId}
+                workout={item}
+                small={true}
+                fullwidth
+              />
+            </Pressable>
+          )}
+          keyExtractor={(item, i) => (item._id ? item._id : i)}
+          scrollEnabled={false}
+          numColumns={2}
           columnWrapperStyle={{
             flexWrap: "wrap",
             width: viewportWidth * 0.85,
           }}
-          data={routine ? routine.workouts : []}
-          renderItem={({ item }) => (
-            <Pressable onPress={() => dispatch(setShowWorkoutInfoModal(true))}>
-              <WorkoutCard workout={item} small={true} />
-            </Pressable>
-          )}
-          keyExtractor={(item) => (item._id ? item._id : nanoid())}
-          scrollEnabled={false}
-          numColumns={2}
         />
       </View>
     </View>

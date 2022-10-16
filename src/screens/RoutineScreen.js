@@ -13,12 +13,10 @@ import { SafeAreaView } from "react-native";
 import { useDispatch } from "react-redux";
 import { setShowRoutineEditModal } from "../slices/modalSlice";
 import { useGetRoutinesQuery } from "../services/routineService";
+import { useGetUserQuery } from "../services/userService";
 
 export default function RoutineScreen() {
   const navigation = useNavigation();
-
-  const { data: routines } = useGetRoutinesQuery();
-
   const dispatch = useDispatch();
 
   useLayoutEffect(() => {
@@ -30,6 +28,15 @@ export default function RoutineScreen() {
     );
   });
 
+  const { data: routines } = useGetRoutinesQuery();
+
+  // fetch active routine from cached user / api request
+  const { activeRoutineId } = useGetUserQuery(undefined, {
+    selectFromResult: ({ data }) => ({
+      activeRoutineId: data?.state.activeRoutine,
+    }),
+  });
+
   const RoutineScreenNested = () => (
     <View className="flex justify-center m-2">
       <Text className="text-bold text-2xl text-center">Routines</Text>
@@ -37,7 +44,12 @@ export default function RoutineScreen() {
       <View className="flex justify-center">
         <FlatList
           data={routines ? routines : []}
-          renderItem={({ item }) => <RoutineContainer routine={item} />}
+          renderItem={({ item }) => (
+            <RoutineContainer
+              routine={item}
+              isActiveRoutine={item._id === activeRoutineId}
+            />
+          )}
           keyExtractor={(item, i) => (item._id ? item._id : i)}
         />
       </View>

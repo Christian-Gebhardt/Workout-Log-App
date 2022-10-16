@@ -41,15 +41,12 @@ export const userApi = api.injectEndpoints({
           : { error: "Undefined error" };
       },
     }),
-    getUserById: builder.query({
+    getUser: builder.query({
       query: () => `/users/me`,
     }),
   }),
   overrideExisting: false,
 });
 
-export const {
-  useGetUserByIdQuery,
-  useLoginUserMutation,
-  useCreateUserMutation,
-} = userApi;
+export const { useGetUserQuery, useLoginUserMutation, useCreateUserMutation } =
+  userApi;

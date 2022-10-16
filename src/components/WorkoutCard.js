@@ -57,7 +57,7 @@ export default function WorkoutCard({ routineId, workout, fullwidth, small }) {
       </View>
       <Divider />
       <View class={styles.container}>
-        {workout && workout.exercises.length > 2 ? (
+        {workout && workout.exercises?.length > 2 ? (
           workout.exercises.slice(0, 2).map((e, i) => (
             <View key={i}>
               <Text>{e.name}</Text>

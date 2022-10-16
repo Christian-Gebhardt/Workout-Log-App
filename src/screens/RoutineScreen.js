@@ -13,7 +13,6 @@ import { SafeAreaView } from "react-native";
 import { useDispatch } from "react-redux";
 import { setShowRoutineEditModal } from "../slices/modalSlice";
 import { useGetRoutinesQuery } from "../services/routineService";
-import { nanoid } from "@reduxjs/toolkit";
 
 export default function RoutineScreen() {
   const navigation = useNavigation();
@@ -39,7 +38,7 @@ export default function RoutineScreen() {
         <FlatList
           data={routines ? routines : []}
           renderItem={({ item }) => <RoutineContainer routine={item} />}
-          keyExtractor={(item) => (item._id ? item._id : nanoid())}
+          keyExtractor={(item, i) => (item._id ? item._id : i)}
         />
       </View>
       <TouchableOpacity

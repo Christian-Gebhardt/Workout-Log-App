@@ -1,19 +1,23 @@
-import { View, Text, TouchableHighlight } from "react-native";
+import { View, Text } from "react-native";
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
-import { AlignJustify, Delete, Repeat } from "react-native-feather";
+import { Delete, Repeat } from "react-native-feather";
 import { Divider } from "@rneui/themed";
 import MenuDropdown from "./MenuDropdown";
+import { useDeleteWorkoutFromRoutineMutation } from "../services/routineService";
 
-export default function WorkoutCard({ fullwidth, workout, small }) {
+export default function WorkoutCard({ routineId, workout, fullwidth, small }) {
   // for dropdown
   const [visible, setVisible] = useState(false);
 
+  const [deleteWorkoutFromRoutine] = useDeleteWorkoutFromRoutineMutation();
+
   // pass options to menu modal with actions
-  const options = [
+  const menuOptions = [
     {
       name: "remove",
-      onPress: () => {},
+      onPress: () =>
+        deleteWorkoutFromRoutine({ routineId, workoutId: workout._id }),
       icon: (
         <Delete
           width={styles.icon.width}
@@ -48,7 +52,7 @@ export default function WorkoutCard({ fullwidth, workout, small }) {
         <MenuDropdown
           visible={visible}
           setVisible={setVisible}
-          options={options}
+          options={menuOptions}
         />
       </View>
       <Divider />

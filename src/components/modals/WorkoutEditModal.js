@@ -44,15 +44,16 @@ export default function WorkoutEditModal() {
 
   const onSaveWorkout = () => {
     addWorkoutToRoutine({
-      id: routineId,
+      routineId,
       workout,
     });
+    dispatch(resetEditWorkout());
     dispatch(setShowWorkoutEditModal(false));
   };
 
   // reset editWorkout in global state
   const onCancel = () => {
-    dispatch(resetEditWorkout);
+    dispatch(resetEditWorkout());
     dispatch(setShowWorkoutEditModal(!showWorkoutEditModal));
   };
 

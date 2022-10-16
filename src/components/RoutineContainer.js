@@ -1,20 +1,58 @@
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import React, { useState } from "react";
 import WorkoutCard from "./WorkoutCard";
-import { Plus } from "react-native-feather";
+import { Plus, Delete, Repeat } from "react-native-feather";
 import { useDispatch } from "react-redux";
 import {
   setShowWorkoutEditModal,
   setWorkoutEditModalRoutineId,
 } from "../slices/modalSlice";
 import { Dimensions } from "react-native";
-import { nanoid } from "@reduxjs/toolkit";
-import { setEditWorkout } from "../slices/workoutSlice";
+import MenuDropdown from "./MenuDropdown";
+import { useDeleteRoutineMutation } from "../services/routineService";
 
 export default function RoutineContainer({ routine }) {
   const dispatch = useDispatch();
 
   const viewportWidth = Dimensions.get("window").width;
+
+  const [deleteRoutine] = useDeleteRoutineMutation();
+
+  const [visible, setVisible] = useState(false);
+
+  // pass options to menu modal with actions
+  const menuOptions = [
+    {
+      name: "remove",
+      onPress: () =>
+        deleteRoutine({
+          routineId: routine._id,
+        }),
+      icon: (
+        <Delete
+          width={styles.icon.width}
+          height={styles.icon.height}
+          color="red"
+        />
+      ),
+    },
+    {
+      name: "replace",
+      icon: (
+        <Repeat
+          width={styles.icon.width}
+          height={styles.icon.height}
+          color="gray"
+        />
+      ),
+    },
+  ];
 
   // show empty workout model to add new workout
   const onShowEmptyWorkoutEditModal = () => {
@@ -23,17 +61,26 @@ export default function RoutineContainer({ routine }) {
   };
 
   return (
-    <View className="flex w-full items-center">
-      <Text className="text-bold text-xl">
-        {routine.name ? routine.name : "undefined"}
-      </Text>
+    <View className="flex items-center border-2 rounded-lg border-slate-300 m-2">
+      <View className="flex flex-row justify-between items-center gap-2 my-2">
+        <Text className="text-bold text-2xl p-2">
+          {routine.name ? routine.name : "undefined"}
+        </Text>
+        <MenuDropdown
+          visible={visible}
+          setVisible={setVisible}
+          options={menuOptions}
+        />
+      </View>
       <FlatList
         columnWrapperStyle={{
           flexWrap: "wrap",
           width: viewportWidth * 0.85,
         }}
         data={routine ? routine.workouts : []}
-        renderItem={({ item }) => <WorkoutCard workout={item} small={true} />}
+        renderItem={({ item }) => (
+          <WorkoutCard routineId={routine._id} workout={item} small={true} />
+        )}
         keyExtractor={(item) => (item._id ? item._id : nanoid())}
         scrollEnabled={false}
         numColumns={2}
@@ -52,3 +99,10 @@ export default function RoutineContainer({ routine }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  icon: {
+    width: 18,
+    height: 18,
+  },
+});

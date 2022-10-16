@@ -18,16 +18,16 @@ export default function ExerciseInput({ exercise, indexExercise }) {
     dispatch(addEditWorkoutSet(indexExercise));
   };
 
-  const onRemoveExercise = (indexExercise) => {
-    dispatch(removeEditWorkoutExercise(indexExercise));
+  const onRemoveExercise = (index) => {
+    dispatch(removeEditWorkoutExercise(index));
     setVisible(false);
   };
 
   // pass options to menu modal with actions
-  const options = [
+  const menuOptions = [
     {
       name: "remove",
-      onPress: onRemoveExercise.bind(this, indexExercise),
+      onPress: () => onRemoveExercise(indexExercise),
       icon: (
         <Delete
           width={styles.icon.width}
@@ -55,7 +55,7 @@ export default function ExerciseInput({ exercise, indexExercise }) {
         <MenuDropdown
           visible={visible}
           setVisible={setVisible}
-          options={options}
+          options={menuOptions}
         />
       </View>
 

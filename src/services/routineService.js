@@ -14,11 +14,25 @@ export const routineApi = api.injectEndpoints({
       }),
       invalidatesTags: ["Routines"],
     }),
+    deleteRoutine: builder.mutation({
+      query: ({ routineId }) => ({
+        url: `/routines/${routineId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Routines"],
+    }),
     addWorkoutToRoutine: builder.mutation({
-      query: ({ id, workout }) => ({
-        url: `/routines/addWorkout/${id}`,
+      query: ({ routineId, workout }) => ({
+        url: `/routines/addWorkout/${routineId}`,
         method: "PATCH",
         body: workout,
+      }),
+      invalidatesTags: ["Routines"],
+    }),
+    deleteWorkoutFromRoutine: builder.mutation({
+      query: ({ routineId, workoutId }) => ({
+        url: `/routines/deleteWorkout/${routineId}/${workoutId}`,
+        method: "DELETE",
       }),
       invalidatesTags: ["Routines"],
     }),
@@ -29,5 +43,7 @@ export const routineApi = api.injectEndpoints({
 export const {
   useGetRoutinesQuery,
   useAddRoutineMutation,
+  useDeleteRoutineMutation,
   useAddWorkoutToRoutineMutation,
+  useDeleteWorkoutFromRoutineMutation,
 } = routineApi;

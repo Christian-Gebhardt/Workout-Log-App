@@ -1,16 +1,20 @@
-import { View, Text, StyleSheet, Modal, Pressable } from "react-native";
+import { View, Text, StyleSheet, Modal, TouchableOpacity } from "react-native";
 import React from "react";
 import ExerciseItem from "../ExerciseItem";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setShowWorkoutInfoModal,
   setShowActiveWorkoutModal,
+  selectWorkoutInfoModalWorkout,
 } from "../../slices/modalSlice";
 import { selectShowWorkoutInfoModal } from "../../slices/modalSlice";
 
-export function WorkoutInfoModal({ exercises }) {
+export function WorkoutInfoModal() {
   const showWorkoutInfoModal = useSelector(selectShowWorkoutInfoModal);
   const dispatch = useDispatch();
+
+  // select workout that was clicked on
+  const workout = useSelector(selectWorkoutInfoModalWorkout);
 
   const onStartPress = () => {
     dispatch(setShowWorkoutInfoModal(!showWorkoutInfoModal));
@@ -28,16 +32,16 @@ export function WorkoutInfoModal({ exercises }) {
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text className="text-bold text-xl mb-4 text-center">
-            Workout Name
+          <Text className="text-bold text-2xl mb-4 text-center">
+            {workout ? workout.name : "Workout"}
           </Text>
           <View className="flex flex-col justify-between">
-            {exercises?.map((e, i) => (
-              <ExerciseItem key={i} exercise={e} />
+            {workout?.exercises.map((e, i) => (
+              <ExerciseItem key={i} exerciseInstance={e} />
             ))}
           </View>
           <View className="flex gap-2 mx-2 mt-2">
-            <Pressable
+            <TouchableOpacity
               className="rounded-full p-2 m-6 shadow-md bg-red-600"
               onPress={() =>
                 dispatch(setShowWorkoutInfoModal(!showWorkoutInfoModal))
@@ -46,15 +50,15 @@ export function WorkoutInfoModal({ exercises }) {
               <Text className="text-bold text-base text-center text-white">
                 Cancel
               </Text>
-            </Pressable>
-            <Pressable
+            </TouchableOpacity>
+            <TouchableOpacity
               className="rounded-full p-2 m-6 shadow-md bg-blue-600"
               onPress={onStartPress}
             >
               <Text className="text-bold text-base text-center text-white">
                 Start Workout
               </Text>
-            </Pressable>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

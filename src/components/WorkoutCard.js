@@ -6,7 +6,7 @@ import { Divider } from "@rneui/themed";
 import MenuDropdown from "./MenuDropdown";
 import { useDeleteWorkoutFromRoutineMutation } from "../services/routineService";
 
-export default function WorkoutCard({ routineId, workout, fullwidth, small }) {
+export default function WorkoutCard({ routineId, workout, fullWidth, small }) {
   // for dropdown
   const [visible, setVisible] = useState(false);
 
@@ -42,7 +42,7 @@ export default function WorkoutCard({ routineId, workout, fullwidth, small }) {
     <View
       className="flex-1 border-2 border-stone-300 rounded-xl m-2 p-2"
       style={{
-        maxWidth: !fullwidth ? "42.5%" : "100%",
+        maxWidth: !fullWidth ? "42.5%" : "100%",
       }}
     >
       <View className="flex flex-row justify-between items-center gap-2 my-2">

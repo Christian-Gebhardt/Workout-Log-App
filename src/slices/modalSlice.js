@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   activeWorkoutModal: { show: false },
-  workoutInfoModal: { show: false },
+  workoutInfoModal: { show: false, workout: null },
   workoutEditModal: { show: false, routineId: null },
   exerciseAddModal: { show: false },
   routineEditModal: { show: false },
@@ -30,6 +30,9 @@ export const modalSlice = createSlice({
     setWorkoutEditModalRoutineId: (state, action) => {
       state.workoutEditModal.routineId = action.payload;
     },
+    setWorkoutInfoModalWorkout: (state, action) => {
+      state.workoutInfoModal.workout = action.payload;
+    },
   },
 });
 
@@ -41,6 +44,7 @@ export const {
   setShowExerciseAddModal,
   setShowRoutineEditModal,
   setWorkoutEditModalRoutineId,
+  setWorkoutInfoModalWorkout,
 } = modalSlice.actions;
 
 // selectors
@@ -56,5 +60,7 @@ export const selectShowRoutineEditModal = (state) =>
   state.modal.routineEditModal.show;
 export const selectWorkoutEditModalRoutineId = (state) =>
   state.modal.workoutEditModal.routineId;
+export const selectWorkoutInfoModalWorkout = (state) =>
+  state.modal.workoutInfoModal.workout;
 
 export default modalSlice.reducer;

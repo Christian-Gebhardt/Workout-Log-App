@@ -1,14 +1,17 @@
-import { SafeAreaView, View, Text, FlatList, Dimensions } from "react-native";
 import React, { useLayoutEffect } from "react";
-import { StyleSheet, Pressable } from "react-native";
-import WorkoutCard from "../components/WorkoutCard";
+import { SafeAreaView, View, Text, FlatList, Dimensions } from "react-native";
+import { StyleSheet, TouchableOpacity } from "react-native";
 import { Divider } from "@rneui/themed";
 import { useDispatch } from "react-redux";
-import { setShowWorkoutInfoModal } from "../slices/modalSlice";
+import {
+  setShowWorkoutInfoModal,
+  setWorkoutInfoModalWorkout,
+} from "../slices/modalSlice";
 import { useNavigation } from "@react-navigation/native";
 
 import { useGetRoutinesQuery } from "../services/routineService";
 import { useGetUserQuery } from "../services/userService";
+import WorkoutCard from "../components/WorkoutCard";
 
 export default function StartWorkoutScreen() {
   const dispatch = useDispatch();
@@ -42,23 +45,31 @@ export default function StartWorkoutScreen() {
     );
   });
 
+  // show workout info modal with worked that was clicked on
+  const onShowWorkoutInfo = (workout) => {
+    console.log("clicked ", workout._id);
+    dispatch(setWorkoutInfoModalWorkout(workout));
+    dispatch(setShowWorkoutInfoModal(true));
+  };
+
   const StartWorkoutScreenNested = () => (
     <View className="m-2">
       <Text className="text-bold text-2xl text-center">Start New Workout</Text>
       <Divider style={styles.divider} />
-      <Text className="text-bold text-lg p-2 text-center">
+      <Text className="text-bold text-xl p-2 text-center">
         Next for your plan:
       </Text>
-      <View className="flex-row justify-center">
-        <Pressable
-          className="flex-1 items-center"
-          onPress={() => dispatch(setShowWorkoutInfoModal(true))}
+      <View className="flex justify-center items-center">
+        <TouchableOpacity
+          className="w-1/2"
+          onPress={() => onShowWorkoutInfo(nextWorkout ? nextWorkout : null)}
         >
           <WorkoutCard
             routineId={activeRoutineId}
             workout={nextWorkout ? nextWorkout : null}
+            fullWidth
           />
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       <Divider style={styles.divider} />
@@ -70,17 +81,17 @@ export default function StartWorkoutScreen() {
         <FlatList
           data={activeRoutine ? activeRoutine.workouts : []}
           renderItem={({ item }) => (
-            <Pressable
+            <TouchableOpacity
               className="w-1/2"
-              onPress={() => dispatch(setShowWorkoutInfoModal(true))}
+              onPress={() => onShowWorkoutInfo(item)}
             >
               <WorkoutCard
                 routineId={activeRoutineId}
                 workout={item}
                 small={true}
-                fullwidth
+                fullWidth
               />
-            </Pressable>
+            </TouchableOpacity>
           )}
           keyExtractor={(item, i) => (item._id ? item._id : i)}
           scrollEnabled={false}

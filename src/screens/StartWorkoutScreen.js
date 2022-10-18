@@ -47,7 +47,6 @@ export default function StartWorkoutScreen() {
 
   // show workout info modal with worked that was clicked on
   const onShowWorkoutInfo = (workout) => {
-    console.log("clicked ", workout._id);
     dispatch(setWorkoutInfoModalWorkout(workout));
     dispatch(setShowWorkoutInfoModal(true));
   };

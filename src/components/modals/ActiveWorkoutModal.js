@@ -6,8 +6,7 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+import React from "react";
 import ExerciseInput from "../ExerciseInput";
 import ExerciseAddModal from "./ExerciseAddModal";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,14 +15,15 @@ import {
   setShowActiveWorkoutModal,
   setShowExerciseAddModal,
 } from "../../slices/modalSlice";
+import { selectActiveWorkout } from "../../slices/workoutSlice";
 
 export function ActiveWorkoutModal() {
   const showActiveWorkoutModal = useSelector(selectShowActiveWorkoutModal);
   const dispatch = useDispatch();
 
-  const workout = useSelector((state) => state.workout);
+  const workout = useSelector(selectActiveWorkout);
 
-  const saveWorkout = () => {};
+  const saveCompletedWorkout = () => {};
 
   return (
     <Modal
@@ -40,10 +40,15 @@ export function ActiveWorkoutModal() {
         <ScrollView className="flex flex-1">
           <View className="bg-white my-4">
             <Text className="text-bold text-2xl m-4 text-center">
-              {workout.name}
+              {"Workout"}
             </Text>
             {workout.exercises?.map((e, i) => (
-              <ExerciseInput key={i} exercise={e} />
+              <ExerciseInput
+                key={i}
+                exercise={e}
+                indexExercise={i}
+                isActiveWorkout={true}
+              />
             ))}
             <Pressable className="rounded-full px-4 py-2 shadow-md bg-blue-600 w-1/2 self-center">
               <Text

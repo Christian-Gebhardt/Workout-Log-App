@@ -88,7 +88,12 @@ export default function WorkoutEditModal() {
                 multiline={true}
               />
               {exercises?.map((e, i) => (
-                <ExerciseInput key={i} exercise={e} indexExercise={i} />
+                <ExerciseInput
+                  key={i}
+                  exercise={e}
+                  indexExercise={i}
+                  isActiveWorkout={false}
+                />
               ))}
               <View className="flex justify-center items-center gap-4 m-2">
                 <TouchableOpacity

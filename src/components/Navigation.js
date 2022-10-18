@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -7,7 +7,7 @@ import RegisterScreen from "../screens/RegisterScreen";
 import StartWorkoutScreen from "../screens/StartWorkoutScreen";
 import HistoryScreen from "../screens/HistoryScreen";
 import RoutineScreen from "../screens/RoutineScreen";
-import { useGetUserByIdQuery, useGetUserQuery } from "../services/userService";
+import { useGetUserQuery } from "../services/userService";
 import { getValue } from "../util/localStorage";
 import { ActivityIndicator, View } from "react-native";
 import { Activity, Play, Star, User } from "react-native-feather";
@@ -15,7 +15,6 @@ import ProfileScreen from "../screens/ProfileScreen";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectIsAuthenticated,
-  selectUser,
   setIsAuthenticated,
   setUser,
 } from "../slices/userSlice";
@@ -31,10 +30,9 @@ export default function Navigation() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const dispatch = useDispatch();
 
-  const user = useSelector(selectUser);
-  const skip = user ? false : true;
-  const { data, isError, isLoading } = useGetUserQuery({
-    skip,
+  const [isUserInCache, setIsUserInCache] = useState(false);
+  const { data, isError, isLoading } = useGetUserQuery(undefined, {
+    skip: !isUserInCache,
   });
 
   // try to set user from initial local storage when root component mounts
@@ -44,7 +42,7 @@ export default function Navigation() {
         const user = JSON.parse(await getValue("user"));
         if (user && user.token) {
           dispatch(setUser(user));
-          console.log("user in local storage!");
+          setIsUserInCache(true);
         }
       } catch {}
     };

@@ -1,26 +1,24 @@
 import { View, Text, TouchableHighlight } from "react-native";
 import { Info } from "react-native-feather";
 import React from "react";
-import { useGetExercisesQuery } from "../services/exerciseService";
+import { getExerciseInstanceInfo } from "../util/helpers/exerciseHelper";
 
 export default function ExerciseItem({ exerciseInstance }) {
-  const { exerciseInfo } = useGetExercisesQuery(undefined, {
-    selectFromResult: ({ data }) => ({
-      exerciseInfo: data.find((e) => e._id === exerciseInstance.exercise),
-    }),
-  });
+  const exercise = exerciseInstance.name
+    ? exerciseInstance
+    : getExerciseInstanceInfo(exerciseInstance);
 
   return (
     <View
       className={
-        exerciseInfo?.isSelected
+        exercise?.isSelected
           ? "flex-row justify-between bg-indigo-100"
           : "flex-row justify-between"
       }
     >
       <View>
         <Text className="text-bold text-lg">
-          {exerciseInfo ? exerciseInfo.name : "Exercise"}
+          {exercise ? exercise.name : "Exercise"}
         </Text>
       </View>
       <TouchableHighlight

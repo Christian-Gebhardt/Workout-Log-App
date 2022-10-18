@@ -29,7 +29,6 @@ export default function RoutineScreen() {
   });
 
   const { data: routines } = useGetRoutinesQuery();
-
   // fetch active routine from cached user / api request
   const { activeRoutineId } = useGetUserQuery(undefined, {
     selectFromResult: ({ data }) => ({

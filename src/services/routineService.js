@@ -24,7 +24,7 @@ export const routineApi = api.injectEndpoints({
     addWorkoutToRoutine: builder.mutation({
       query: ({ routineId, workout }) => ({
         url: `/routines/addWorkout/${routineId}`,
-        method: "PATCH",
+        method: "POST",
         body: workout,
       }),
       invalidatesTags: ["Routines"],

@@ -2,24 +2,43 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import React from "react";
 import ExerciseSetInput from "./ExerciseSetInput";
 import MenuDropdown from "./MenuDropdown";
-import { addEditWorkoutSet } from "../slices/workoutSlice";
+import {
+  addActiveWorkoutSet,
+  addEditWorkoutSet,
+  removeActiveWorkoutExercise,
+} from "../slices/workoutSlice";
 import { useDispatch } from "react-redux";
 import { removeEditWorkoutExercise } from "../slices/workoutSlice";
 import { Delete, Repeat } from "react-native-feather";
 import { useState } from "react";
+import { getExerciseInstanceInfo } from "../util/helpers/exerciseHelper";
 
-export default function ExerciseInput({ exercise, indexExercise }) {
+export default function ExerciseInput({
+  exercise,
+  indexExercise,
+  isActiveWorkout,
+}) {
   const dispatch = useDispatch();
 
+  const exerciseInfo = getExerciseInstanceInfo(exercise);
   // for dropdown
   const [visible, setVisible] = useState(false);
+
   // add set to exercise
-  const onAddSet = () => {
-    dispatch(addEditWorkoutSet(indexExercise));
+  const onAddSet = (isActiveWorkout, indexExercise) => {
+    if (isActiveWorkout) {
+      dispatch(addActiveWorkoutSet(indexExercise));
+    } else {
+      dispatch(addEditWorkoutSet(indexExercise));
+    }
   };
 
   const onRemoveExercise = (index) => {
-    dispatch(removeEditWorkoutExercise(index));
+    if (isActiveWorkout) {
+      dispatch(removeEditWorkoutExercise(index));
+    } else {
+      dispatch(removeActiveWorkoutExercise(index));
+    }
     setVisible(false);
   };
 
@@ -51,7 +70,7 @@ export default function ExerciseInput({ exercise, indexExercise }) {
   return (
     <View>
       <View className="flex flex-row justify-between items-center p-2">
-        <Text className="text-bold text-lg">{exercise.name}</Text>
+        <Text className="text-bold text-lg">{exerciseInfo.name}</Text>
         <MenuDropdown
           visible={visible}
           setVisible={setVisible}
@@ -64,19 +83,20 @@ export default function ExerciseInput({ exercise, indexExercise }) {
         <Text style={styles.prevCol}>Previous</Text>
         <Text style={styles.repCol}>Reps</Text>
         <Text style={styles.kgCol}>kg</Text>
+        <Text style={styles.checkCol}></Text>
       </View>
       {exercise.sets?.map((set, i) => (
         <ExerciseSetInput
           key={i}
-          exercise={exercise}
           set={set}
           indexExercise={indexExercise}
           indexSet={i}
+          isActiveWorkout={isActiveWorkout}
         />
       ))}
       <Pressable
         className="rounded-full px-2 m-4 shadow-md bg-gray-400"
-        onPress={() => onAddSet()}
+        onPress={() => onAddSet(isActiveWorkout, indexExercise)}
       >
         <Text className="text-bold text-sm text-center text-white">
           Add Set
@@ -106,15 +126,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   prevCol: {
-    flex: "35%",
+    flex: "32.5%",
     textAlign: "center",
   },
   repCol: {
-    flex: "25%",
+    flex: "21.25%",
     textAlign: "center",
   },
   kgCol: {
-    flex: "25%",
+    flex: "21.25%",
+    textAlign: "center",
+  },
+  checkCol: {
+    flex: "10%",
     textAlign: "center",
   },
   icon: {

@@ -5,34 +5,94 @@ import {
   Animated,
   StyleSheet,
   Pressable,
+  TouchableOpacity,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Swipeable } from "react-native-gesture-handler";
-import { Delete } from "react-native-feather";
+import { CheckSquare, Delete } from "react-native-feather";
 import { useDispatch } from "react-redux";
-import { removeEditWorkoutSet } from "../slices/workoutSlice";
+import {
+  removeActiveWorkoutSet,
+  removeEditWorkoutSet,
+  updateActiveWorkoutSet,
+} from "../slices/workoutSlice";
 
 export default function ExerciseSetInput({
-  exercise,
   set,
   indexExercise,
   indexSet,
+  isActiveWorkout,
 }) {
   const swipeableRef = useRef(null);
 
   const dispatch = useDispatch();
 
-  const [weight, onChangeWeight] = useState(null);
-  const [repCount, onChangeRepCount] = useState(null);
+  const [isChecked, setIsChecked] = useState(false);
+
+  const [exerciseSetInput, setExerciseSetInput] = useState({
+    ...set,
+    weight: null,
+    reps: null,
+  });
+
+  const { weight, reps } = exerciseSetInput;
+
+  useEffect(() => {
+    dispatch(
+      updateActiveWorkoutSet({
+        indexExercise,
+        indexSet,
+        updateSet: {
+          ...exerciseSetInput,
+          isChecked,
+        },
+      })
+    );
+  }, [isChecked]);
+
+  const onCheck = () => {
+    setIsChecked(!isChecked);
+  };
+
+  const onChange = (name) => (value) => {
+    switch (name) {
+      case "weight":
+        setExerciseSetInput((prevState) => ({
+          ...prevState,
+          weight: Number(value),
+        }));
+        break;
+      case "reps":
+        setExerciseSetInput((prevState) => ({
+          ...prevState,
+          reps: Number(value),
+        }));
+        break;
+      case "type":
+        setExerciseSetInput((prevState) => ({
+          ...prevState,
+          type: value,
+        }));
+    }
+  };
 
   const onRemoveSet = () => {
     swipeableRef.current.close();
-    dispatch(
-      removeEditWorkoutSet({
-        indexExercise,
-        indexSet,
-      })
-    );
+    if (isActiveWorkout) {
+      dispatch(
+        removeActiveWorkoutSet({
+          indexExercise,
+          indexSet,
+        })
+      );
+    } else {
+      dispatch(
+        removeEditWorkoutSet({
+          indexExercise,
+          indexSet,
+        })
+      );
+    }
   };
 
   // drag component to remove set
@@ -61,7 +121,9 @@ export default function ExerciseSetInput({
 
   return (
     <Swipeable ref={swipeableRef} renderRightActions={renderRightActions}>
-      <View className="flex-row py-1">
+      <View
+        className={!isChecked ? "flex-row py-1" : "flex-row py-1 bg-green-500"}
+      >
         <Text style={styles.setCell}>{indexSet + 1}</Text>
         <Text style={styles.prevCell}>
           {set.prevPerformance ? set.prevPerformance : "-"}
@@ -69,7 +131,7 @@ export default function ExerciseSetInput({
         <View style={styles.kgCell}>
           <TextInput
             className="text-center w-8/12 bg-slate-200 rounded-lg self-center"
-            onChangeText={onChangeWeight}
+            onChangeText={onChange("weight")}
             value={weight}
             placeholder="-"
             keyboardType="numeric"
@@ -78,11 +140,16 @@ export default function ExerciseSetInput({
         <View style={styles.repCell}>
           <TextInput
             className="text-center w-8/12 bg-slate-200 rounded-lg self-center"
-            onChangeText={onChangeRepCount}
-            value={repCount}
+            onChangeText={onChange("reps")}
+            value={reps}
             placeholder="-"
             keyboardType="numeric"
           />
+        </View>
+        <View style={styles.checkCell}>
+          <TouchableOpacity onPress={onCheck}>
+            <CheckSquare color="black" width={18} height={18} />
+          </TouchableOpacity>
         </View>
       </View>
     </Swipeable>
@@ -112,15 +179,25 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   prevCell: {
-    flex: "35%",
+    flex: "32.5%",
     textAlign: "center",
   },
   repCell: {
-    flex: "25%",
+    flex: "21.25%",
     textAlign: "center",
   },
   kgCell: {
-    flex: "25%",
+    flex: "21.25%",
     textAlign: "center",
+  },
+  checkCell: {
+    flex: "10%",
+    flexDirection: "row",
+    justifyContent: "center",
+    textAlign: "center",
+  },
+  icon: {
+    width: 12,
+    height: 12,
   },
 });

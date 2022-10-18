@@ -8,6 +8,7 @@ import {
   selectWorkoutInfoModalWorkout,
 } from "../../slices/modalSlice";
 import { selectShowWorkoutInfoModal } from "../../slices/modalSlice";
+import { setActiveWorkout } from "../../slices/workoutSlice";
 
 export function WorkoutInfoModal() {
   const showWorkoutInfoModal = useSelector(selectShowWorkoutInfoModal);
@@ -16,7 +17,8 @@ export function WorkoutInfoModal() {
   // select workout that was clicked on
   const workout = useSelector(selectWorkoutInfoModalWorkout);
 
-  const onStartPress = () => {
+  const onStartPress = (workout) => {
+    dispatch(setActiveWorkout(workout));
     dispatch(setShowWorkoutInfoModal(!showWorkoutInfoModal));
     dispatch(setShowActiveWorkoutModal(true));
   };
@@ -53,7 +55,7 @@ export function WorkoutInfoModal() {
             </TouchableOpacity>
             <TouchableOpacity
               className="rounded-full p-2 m-6 shadow-md bg-blue-600"
-              onPress={onStartPress}
+              onPress={() => onStartPress(workout)}
             >
               <Text className="text-bold text-base text-center text-white">
                 Start Workout

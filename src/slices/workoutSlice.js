@@ -53,6 +53,17 @@ const workoutSlice = createSlice({
     resetActiveWorkout: (state) => {
       state.activeWorkout = initialState.activeWorkout;
     },
+    updateActiveWorkoutSet: (state, action) => {
+      console.log(action.payload.updateSet);
+      const updateExercise = state.activeWorkout.exercises.find(
+        (_, i) => action.payload.indexExercise === i
+      );
+      if (updateExercise) {
+        updateExercise.sets = updateExercise.sets.map((e, i) =>
+          action.payload.indexSet !== i ? e : action.payload.updateSet
+        );
+      }
+    },
     // editWorkout reducers
     setEditWorkout: (state, action) => {
       state.editWorkout = action.payload;
@@ -101,6 +112,7 @@ export const {
   addActiveWorkoutSet,
   removeActiveWorkoutSet,
   resetActiveWorkout,
+  updateActiveWorkoutSet,
   setEditWorkout,
   setEditWorkoutName,
   setEditWorkoutNotes,

@@ -96,7 +96,7 @@ export default function ExerciseAddModal() {
             {selectableExercises.map((e, i) => (
               <Pressable key={i} onPress={() => updateSelectableExercises(e)}>
                 <View>
-                  <ExerciseItem exercise={e} />
+                  <ExerciseItem exerciseInstance={e} />
                   <Divider />
                 </View>
               </Pressable>

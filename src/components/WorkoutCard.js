@@ -5,6 +5,7 @@ import { Delete, Repeat } from "react-native-feather";
 import { Divider } from "@rneui/themed";
 import MenuDropdown from "./MenuDropdown";
 import { useDeleteWorkoutFromRoutineMutation } from "../services/routineService";
+import { getExerciseInstanceInfo } from "../util/helpers/exerciseHelper";
 
 export default function WorkoutCard({ routineId, workout, fullWidth, small }) {
   // for dropdown
@@ -58,9 +59,9 @@ export default function WorkoutCard({ routineId, workout, fullWidth, small }) {
       <Divider />
       <View class={styles.container}>
         {workout && workout.exercises?.length > 2 ? (
-          workout.exercises.slice(0, 2).map((e, i) => (
+          workout.exercises.slice(0, 3).map((e, i) => (
             <View key={i}>
-              <Text>{e.name}</Text>
+              <Text>{getExerciseInstanceInfo(e)?.name}</Text>
             </View>
           ))
         ) : (

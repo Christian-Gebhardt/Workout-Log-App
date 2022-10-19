@@ -14,6 +14,18 @@ import { useGetUserQuery } from "../services/userService";
 import WorkoutCard from "../components/WorkoutCard";
 
 export default function StartWorkoutScreen() {
+  const viewportWidth = Dimensions.get("window").width;
+
+  const navigation = useNavigation();
+  useLayoutEffect(() => {
+    navigation.setOptions(
+      {
+        headerShown: false,
+      },
+      []
+    );
+  });
+
   const dispatch = useDispatch();
 
   // fetch active routine from cached user / api request
@@ -29,21 +41,9 @@ export default function StartWorkoutScreen() {
     }),
   });
 
-  const nextWorkout = activeRoutine.workouts.find(
+  const nextWorkout = activeRoutine?.workouts.find(
     (e) => e._id === activeRoutine.nextWorkout
   );
-
-  const viewportWidth = Dimensions.get("window").width;
-
-  const navigation = useNavigation();
-  useLayoutEffect(() => {
-    navigation.setOptions(
-      {
-        headerShown: false,
-      },
-      []
-    );
-  });
 
   // show workout info modal with worked that was clicked on
   const onShowWorkoutInfo = (workout) => {
@@ -61,11 +61,11 @@ export default function StartWorkoutScreen() {
       <View className="flex justify-center items-center">
         <TouchableOpacity
           className="w-1/2"
-          onPress={() => onShowWorkoutInfo(nextWorkout ? nextWorkout : null)}
+          onPress={() => onShowWorkoutInfo(nextWorkout)}
         >
           <WorkoutCard
             routineId={activeRoutineId}
-            workout={nextWorkout ? nextWorkout : null}
+            workout={nextWorkout}
             fullWidth
           />
         </TouchableOpacity>

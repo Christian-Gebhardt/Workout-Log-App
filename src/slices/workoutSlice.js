@@ -54,7 +54,6 @@ const workoutSlice = createSlice({
       state.activeWorkout = initialState.activeWorkout;
     },
     updateActiveWorkoutSet: (state, action) => {
-      console.log(action.payload.updateSet);
       const updateExercise = state.activeWorkout.exercises.find(
         (_, i) => action.payload.indexExercise === i
       );

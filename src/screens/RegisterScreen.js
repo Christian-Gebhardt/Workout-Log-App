@@ -48,6 +48,7 @@ export default function RegisterScreen() {
       email,
       password,
     });
+
     if (res.data) {
       dispatch(setIsAuthenticated(true));
       Toast.show({

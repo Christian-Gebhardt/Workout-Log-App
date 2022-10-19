@@ -16,14 +16,21 @@ import {
   setShowExerciseAddModal,
 } from "../../slices/modalSlice";
 import { selectActiveWorkout } from "../../slices/workoutSlice";
+import { useAddCompletedWorkoutToHistoryMutation } from "../../services/historyService";
 
 export function ActiveWorkoutModal() {
   const showActiveWorkoutModal = useSelector(selectShowActiveWorkoutModal);
   const dispatch = useDispatch();
 
+  const [addCompletedWorkoutToHistory] =
+    useAddCompletedWorkoutToHistoryMutation();
+
   const workout = useSelector(selectActiveWorkout);
 
-  const saveCompletedWorkout = () => {};
+  const onSaveCompletedWorkout = () => {
+    addCompletedWorkoutToHistory(workout);
+    dispatch(setShowActiveWorkoutModal(!showActiveWorkoutModal));
+  };
 
   return (
     <Modal
@@ -32,7 +39,6 @@ export function ActiveWorkoutModal() {
       visible={showActiveWorkoutModal}
       statusBarTranslucent={false}
       onRequestClose={() => {
-        Alert.alert("Modal has been closed.");
         dispatch(setShowActiveWorkoutModal(!showActiveWorkoutModal));
       }}
     >
@@ -61,9 +67,7 @@ export function ActiveWorkoutModal() {
             <View className="flex justify-center items-center gap-2 my-8 mx-2">
               <Pressable
                 className="rounded-full py-2 px-6 shadow-md bg-green-600 w-1/2"
-                onPress={() =>
-                  dispatch(setShowActiveWorkoutModal(!showActiveWorkoutModal))
-                }
+                onPress={onSaveCompletedWorkout}
               >
                 <Text className="text-bold text-base text-center text-white">
                   Finish

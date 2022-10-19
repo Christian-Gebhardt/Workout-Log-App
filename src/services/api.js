@@ -16,7 +16,7 @@ export const api = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Routines", "AvailableExercises"],
+  tagTypes: ["Routines", "AvailableExercises", "CompletedWorkouts"],
   credentials: "include", // This allows server to set cookies
   endpoints: () => ({}),
 });

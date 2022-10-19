@@ -78,19 +78,17 @@ export default function RoutineContainer({ routine, isActiveRoutine }) {
           options={menuOptions}
         />
       </View>
-      <FlatList
-        columnWrapperStyle={{
-          flexWrap: "wrap",
-          width: viewportWidth * 0.85,
-        }}
-        data={routine ? routine.workouts : []}
-        renderItem={({ item }) => (
-          <WorkoutCard routineId={routine._id} workout={item} small={true} />
-        )}
-        keyExtractor={(item, i) => (item._id ? item._id : i)}
-        scrollEnabled={false}
-        numColumns={2}
-      />
+      <View className="flex-row justify-center">
+        <FlatList
+          data={routine ? routine.workouts : []}
+          renderItem={({ item }) => (
+            <WorkoutCard routineId={routine._id} workout={item} fullWidth />
+          )}
+          keyExtractor={(item, i) => (item._id ? item._id : i)}
+          scrollEnabled={false}
+          numColumns={2}
+        />
+      </View>
       <TouchableOpacity
         className="rounded-full px-4 py-2 m-4 shadow-md bg-blue-600"
         onPress={() => onShowEmptyWorkoutEditModal()}
